@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: database
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/springbootdb
+    username: postgres
+    password: postgres
+    # driver-class-name: org.postgresql.Driver  # Optional: auto-detected
+    hikari:
+      pool-name: HikariPool-1
+      auto-commit: true
+      minimum-idle: 5
+      maximum-pool-size: 10
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+# Optional logging levels (uncomment to enable)
+# logging:
+#   level:
+#     com.zaxxer.hikari: INFO
+#     org.springframework.jdbc.datasource: DEBUG
+#     org.springframework.boot.autoconfigure.jdbc: INFO
