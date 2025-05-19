@@ -1,4 +1,4 @@
-package com.project.structure.database;
+package com.project.structure.database.logging;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

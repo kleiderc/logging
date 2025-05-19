@@ -1,4 +1,4 @@
-package com.project.structure.database.model;
+package com.project.structure.database.logging.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

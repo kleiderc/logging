@@ -9,11 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.project</groupId>
-	<artifactId>database</artifactId>
+	<artifactId>logging</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>database</name>
-	<description>Best practices for basic project database for Spring Boot</description>
+	<name>logging</name>
+	<description>Best practices for basic project logging for Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -58,6 +58,16 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.7.1</version> <!-- REQUIRED for PostgreSQL 17 -->
 			<!--scope>runtime</scope-->
+		</dependency>
+		<!-- Spring Data AOP -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<!-- Spring Data Logging -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-logging</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

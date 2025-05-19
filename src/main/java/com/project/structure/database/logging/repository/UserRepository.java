@@ -1,11 +1,11 @@
 /**
  * 
  */
-package com.project.structure.database.repository;
+package com.project.structure.database.logging.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.project.structure.database.model.User;
+import com.project.structure.database.logging.model.User;
 
 /**
  * Provides basic CRUD operations using JpaRepository

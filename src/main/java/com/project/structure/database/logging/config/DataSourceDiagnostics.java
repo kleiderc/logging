@@ -1,4 +1,4 @@
-package com.project.structure.database.config;
+package com.project.structure.database.logging.config;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

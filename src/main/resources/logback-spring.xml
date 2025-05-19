@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Root element of logback configuration -->
+<configuration scan="true" scanPeriod="30 seconds">
+	<!-- Enables auto reloading of configuration every 30 seconds -->
+
+	<!-- ============================== -->
+	<!-- 🔧 Global Properties -->
+	<!-- ============================== -->
+
+	<property name="LOG_PATTERN"
+		value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" />
+	<!-- Sets the log format pattern used by all loggers -->
+
+	<property name="LOG_HOME" value="logs" />
+	<!-- Base directory where log files will be stored -->
+
+	<!-- ============================== -->
+	<!-- 📺 Console Appender -->
+	<!-- ============================== -->
+
+	<appender name="CONSOLE"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<!-- Logs to the standard output (console) -->
+
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern> <!-- Applies defined log pattern -->
+		</encoder>
+	</appender>
+
+	<!-- ============================== -->
+	<!-- 📁 Application File Appender -->
+	<!-- ============================== -->
+
+	<appender name="FILE_APP"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- Main application log appender with rolling support -->
+
+		<file>${LOG_HOME}/application.log</file> <!-- Active log file path -->
+
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern> <!-- Log formatting -->
+		</encoder>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- Rolls log daily and if file size exceeds a limit -->
+
+			<fileNamePattern>${LOG_HOME}/application.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<!-- Naming format of rolled files (date and index) -->
+
+			<maxFileSize>10MB</maxFileSize> <!-- Max size before rolling -->
+
+			<maxHistory>7</maxHistory> <!-- Keep logs for 7 days -->
+
+			<totalSizeCap>100MB</totalSizeCap> <!-- Delete old logs after total cap -->
+		</rollingPolicy>
+	</appender>
+
+	<!-- ============================== -->
+	<!-- ❗ Error Log Appender -->
+	<!-- ============================== -->
+
+	<appender name="FILE_ERROR"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- Logs only ERROR level logs -->
+
+		<file>${LOG_HOME}/error.log</file> <!-- Error log file -->
+
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<!-- Filters log entries to ERROR only -->
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch> <!-- Log ERROR level -->
+			<onMismatch>DENY</onMismatch> <!-- Deny all others -->
+		</filter>
+
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern> <!-- Error log format -->
+		</encoder>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- Rolling policy for error log -->
+			<fileNamePattern>${LOG_HOME}/error.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<!-- Filename format -->
+
+			<maxFileSize>5MB</maxFileSize> <!-- File size limit -->
+
+			<maxHistory>10</maxHistory> <!-- Keep for 10 days -->
+
+			<totalSizeCap>50MB</totalSizeCap> <!-- Cap total error log size -->
+		</rollingPolicy>
+	</appender>
+
+	<!-- ============================== -->
+	<!-- 🌐 Request Log Appender -->
+	<!-- ============================== -->
+
+	<appender name="FILE_REQUEST"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- Logs HTTP request activity (via Interceptor) -->
+
+		<file>${LOG_HOME}/request.log</file> <!-- Request log file -->
+
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern> <!-- Format for request logs -->
+		</encoder>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- Handles request log file rotation -->
+			<fileNamePattern>${LOG_HOME}/request.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<!-- File pattern with date and index -->
+
+			<maxFileSize>5MB</maxFileSize> <!-- Rotate after 5MB -->
+
+			<maxHistory>5</maxHistory> <!-- Keep for 5 days -->
+
+			<totalSizeCap>30MB</totalSizeCap> <!-- Cap total size -->
+		</rollingPolicy>
+	</appender>
+
+	<!-- ============================== -->
+	<!-- 🧠 Service Log Appender -->
+	<!-- ============================== -->
+
+	<!-- RollingFileAppender for INFO level service logs -->
+	<appender name="FILE_SERVICE_INFO"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- Path to the output log file -->
+		<file>logs/service-info.log</file>
+
+		<!-- Log pattern (timestamp, level, logger, message) -->
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern> <!-- Usually defined in a <property> -->
+		</encoder>
+
+		<!-- Filter: only accept INFO level logs -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level> <!-- Only INFO level logs pass -->
+			<onMatch>ACCEPT</onMatch> <!-- Accept logs if level matches -->
+			<onMismatch>DENY</onMismatch> <!-- Reject all others -->
+		</filter>
+
+		<!-- Rolling policy: rotate by size and time -->
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- Rotated file name pattern with date and index -->
+			<fileNamePattern>logs/service-info.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+
+			<!-- Max size before rotating to a new file -->
+			<maxFileSize>5MB</maxFileSize>
+
+			<!-- How many days or files to keep in history -->
+			<maxHistory>10</maxHistory>
+
+			<!-- Total size allowed for all history logs -->
+			<totalSizeCap>50MB</totalSizeCap>
+		</rollingPolicy>
+	</appender>
+
+	<!-- RollingFileAppender for DEBUG level service logs -->
+	<appender name="FILE_SERVICE_DEBUG"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/service-debug.log</file> <!-- Base file name -->
+
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern> <!-- Reuse common log format -->
+		</encoder>
+
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>DEBUG</level> <!-- Filter only DEBUG logs -->
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>logs/service-debug.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<maxFileSize>5MB</maxFileSize>
+			<maxHistory>10</maxHistory>
+			<totalSizeCap>50MB</totalSizeCap>
+		</rollingPolicy>
+	</appender>
+
+	<!-- RollingFileAppender for ERROR level service logs -->
+	<appender name="FILE_SERVICE_ERROR"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/service-error.log</file> <!-- Output file for error logs -->
+
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern> <!-- Shared pattern -->
+		</encoder>
+
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level> <!-- Only ERROR logs allowed -->
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>logs/service-error.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<maxFileSize>5MB</maxFileSize> <!-- Rotate when size exceeds this -->
+			<maxHistory>10</maxHistory> <!-- Keep only last 10 rotations -->
+			<totalSizeCap>50MB</totalSizeCap> <!-- Overall cap for rotated logs -->
+		</rollingPolicy>
+	</appender>
+
+	<appender name="FILE_SERVICE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- Logs service layer events -->
+
+		<file>${LOG_HOME}/service.log</file> <!-- Service log file -->
+
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern> <!-- Format logs -->
+		</encoder>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- Rolling strategy for service log -->
+			<fileNamePattern>${LOG_HOME}/service.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<!-- Include date and index -->
+
+			<maxFileSize>5MB</maxFileSize> <!-- File limit -->
+
+			<maxHistory>5</maxHistory> <!-- Keep logs for 5 days -->
+
+			<totalSizeCap>30MB</totalSizeCap> <!-- Max size of all service logs -->
+		</rollingPolicy>
+	</appender>
+	
+	<!-- ============================== -->
+	<!-- 📌 Root Logger -->
+	<!-- ============================== -->
+
+	<root level="INFO"> <!-- Default logging level -->
+		<appender-ref ref="CONSOLE" /> <!-- Log to console -->
+		<appender-ref ref="FILE_APP" /> <!-- Log to application file -->
+		<appender-ref ref="FILE_ERROR" /> <!-- Log errors separately -->
+	</root>
+
+	<!-- ============================== -->
+	<!-- 🌍 Interceptor Logger -->
+	<!-- ============================== -->
+
+	<logger
+		name="com.project.structure.database.logging.interceptor" level="INFO"
+		additivity="false">
+		<!-- Logs HTTP request info from Interceptor -->
+		<appender-ref ref="FILE_REQUEST" /> <!-- Write to request log only -->
+	</logger>
+
+	<!-- ============================== -->
+	<!-- 🧠 Service Logger -->
+	<!-- ============================== -->
+
+	<logger name="com.project.structure.database.logging.service"
+		level="DEBUG" additivity="false">
+		<!-- Logs service layer methods -->
+		<appender-ref ref="FILE_SERVICE_DEBUG" /><!-- Write to service 
+			log -->
+		<appender-ref ref="FILE_SERVICE_INFO" /><!-- Write to service 
+			log -->
+		<appender-ref ref="FILE_SERVICE_ERROR" /><!-- Write to service 
+			log -->
+		<appender-ref ref="FILE_SERVICE" /> <!-- Write to service log -->
+	</logger>
+
+	<!-- ============================== -->
+	<!-- 🐘 Hibernate Loggers -->
+	<!-- ============================== -->
+
+	<logger name="org.hibernate.SQL" level="DEBUG" />
+	<!-- Logs all SQL statements -->
+
+	<logger name="org.hibernate.type.descriptor.sql.BasicBinder"
+		level="TRACE" />
+	<!-- Logs bind parameter values (e.g., setString/setInt) -->
+
+	<logger name="org.hibernate.type.descriptor.sql.BasicExtractor"
+		level="TRACE" />
+	<!-- Logs value extraction (e.g., from result sets) -->
+
+	<logger name="org.hibernate.engine.transaction" level="DEBUG" />
+	<!-- Logs transaction-related operations -->
+
+	<logger name="org.hibernate.resource.transaction" level="DEBUG" />
+	<!-- Logs resource/transaction coordination -->
+
+	<logger name="org.hibernate.stat" level="DEBUG" />
+	<!-- Logs Hibernate statistics (useful for tuning) -->
+
+	<logger name="org.hibernate.hql.internal.ast" level="DEBUG" />
+	<!-- Logs internal HQL parsing and query AST generation -->
+
+	<logger name="org.hibernate.loader" level="DEBUG" />
+	<!-- Logs SQL loading and query plan generation -->
+
+	<logger name="org.hibernate.persister.entity" level="DEBUG" />
+	<!-- Logs SQL generated for inserts/updates/deletes -->
+</configuration>
+
+<!-- Below is a fully commented logback-spring.xml file with: ✅ Separate 
+	log files ✅ Daily AND size-based rotation ✅ Specific logs for application.log, 
+	error.log, request.log, and service.log ✅ Each line explained with inline 
+	comments -->
